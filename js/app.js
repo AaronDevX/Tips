@@ -12,6 +12,8 @@ function createOrderFunc(){
     }
 
     hideModal()
+
+    extractPlatillos()
 }
 
 function printError(message, type){
@@ -34,4 +36,19 @@ function hideModal(){
     const modal = document.querySelector(".modal");
     const modalB = bootstrap.Modal.getInstance(modal)
     modalB.hide()
+}
+
+function extractPlatillos(){
+    const url = "http://localhost:4000/platillos"
+
+    fetch(url)
+        .then(respuesta => respuesta.json())
+        .then(resultado => showPlatillos(resultado))
+}
+
+function showPlatillos(platillos){
+    platillos.forEach(plato=>{
+        const {id, nombre, precio, categoria} = plato;
+        console.log(plato)
+    })
 }
