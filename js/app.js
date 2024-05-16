@@ -10,6 +10,8 @@ function createOrderFunc(){
         printError("fill all fields", "error-alert")
         return;
     }
+
+    hideModal()
 }
 
 function printError(message, type){
@@ -26,4 +28,10 @@ function printError(message, type){
     setTimeout(() => {
         error.remove()
     }, 1500);
+}
+
+function hideModal(){
+    const modal = document.querySelector(".modal");
+    const modalB = bootstrap.Modal.getInstance(modal)
+    modalB.hide()
 }
