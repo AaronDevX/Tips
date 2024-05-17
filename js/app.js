@@ -95,7 +95,8 @@ function showPlatillos(platillos){
         quantity.classList.add("quantity");
 
         quantity.onchange = (e)=>{
-            quantityChange(e, nombre, precio)
+            quantityChange(e, nombre, precio);
+            gastoTotal()
         }
 
         row.appendChild(mealName);
@@ -203,4 +204,13 @@ function modifyQuantityMealOrder(idT, value){
 function removeMealOrder(id){
     const mealTarget = document.querySelector(`#div-${id}`);
     mealTarget.remove()
+}
+
+function gastoTotal(){
+    let Total = 0;
+    client.order.forEach(meal =>{
+        const totalMeal = meal.precio*meal.quantity
+        Total+=totalMeal;
+    })
+    console.log(Total)
 }
