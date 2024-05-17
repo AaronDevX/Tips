@@ -31,19 +31,12 @@ function createOrderFunc(){
     hideModal()
 
     extractPlatillos()
-
-/*     const quantitymeals = document.querySelectorAll(".quantity");
-    quantitymeals.addEventListener("change", quantityChange);
-
-    quantitymeals.on */
-
 }
 
 function printError(message, type){
     const modalBody = document.querySelector(".modal-body");
     const error = document.createElement("DIV");
     const errorP = document.createElement("P");
-    console.log(message)
 
     error.classList.add(type);
     errorP.textContent = message;
@@ -116,25 +109,26 @@ function showPlatillos(platillos){
 }
 
 function quantityChange(e, nombre, precio){
-    const targetID = e.target.id;
-    const targetValue = e.target.value;
+    const targetID = Number(e.target.id);
+    const targetValue = Number(e.target.value);
 
-    let listMeals = client.order   /* [] */
-    const mealExist = listMeals.some( meal => meal.id == targetID);
+    let listMeals = client.order
+    const mealExist = client.order.some( meal => meal.id == targetID);
     
     if(targetValue == 0){
         client.order = listMeals.filter(meal => meal.id !== targetID)
-        console.log(client.order)
-        return
+        removeMealOrder(targetID)
+        return;
     }
 
     if(mealExist){
-        client.order = listMeals.filter( meal => {
+        listMeals.forEach(meal => {
             if(meal.id == targetID){
                 meal.quantity = targetValue
             }
+            return;
         })
-        console.log(client.order)
+        modifyQuantityMealOrder(targetID, targetValue)
         return;
     }
 
@@ -144,8 +138,69 @@ function quantityChange(e, nombre, precio){
         precio: precio,
         quantity: targetValue
     }
-
     listMeals.push(meal)
+    addMealOrder(targetID)
+}
 
-    console.log(client.order)
+function addMealOrder(idM){
+    listMeals = client.order;
+    lista = consumoContainer.lastElementChild
+
+    listMeals.forEach(meal => {
+        if(meal.id == idM){
+            const {id, nombre, precio, quantity} = meal
+
+            const subTotal = precio*quantity
+            const mealCard = document.createElement("DIV");
+            const mealCardName = document.createElement("H2");
+            const mealCardInfo = document.createElement("DIV");
+            const mealCardQuantity = document.createElement("P");
+            const mealCardPrice = document.createElement("P");
+            const mealCardSubTotal = document.createElement("P");
+            const mealCardDeleteBtn = document.createElement("BUTTON");
+
+            mealCard.id = `div-${id}`;
+            mealCardName.textContent = nombre;
+            mealCardQuantity.textContent  = quantity;
+            mealCardQuantity.id = `q-${id}`;
+            mealCardPrice.textContent = precio;
+            mealCardPrice.id = `p-${id}`
+            mealCardSubTotal.textContent = `$ ${subTotal}`;
+            mealCardSubTotal.id = `st-${id}`
+            mealCardDeleteBtn.textContent = "Delete"
+
+            mealCardInfo.appendChild(mealCardQuantity);
+            mealCardInfo.appendChild(mealCardPrice);
+            mealCardInfo.appendChild(mealCardSubTotal);
+
+            mealCard.appendChild(mealCardName);
+            mealCard.appendChild(mealCardInfo);
+            mealCard.appendChild(mealCardDeleteBtn)
+
+            lista.appendChild(mealCard)
+        }
+    })
+}
+
+function modifyQuantityMealOrder(idT, value){
+    const listMeals = client.order
+
+    listMeals.forEach( meal => {
+        if(meal.id == idT){
+            const {precio, quantity} = meal;
+
+            const quantityTarget = document.querySelector(`#q-${idT}`);
+            const subTotalTarget = document.querySelector(`#st-${idT}`);
+
+            const subTotal = quantity*precio;
+
+            quantityTarget.textContent = value;
+            subTotalTarget.textContent = `$ ${subTotal}`
+        }
+    })
+}
+
+function removeMealOrder(id){
+    const mealTarget = document.querySelector(`#div-${id}`);
+    mealTarget.remove()
 }
