@@ -1,0 +1,5 @@
+.fila-platos{
+    display: grid;
+    grid-template-columns: 5fr repeat(3, 2fr);
+    margin-bottom: 10px;   
+}
