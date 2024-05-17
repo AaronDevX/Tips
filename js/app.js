@@ -1,18 +1,17 @@
 const createOrder = document.querySelector("#guardar-cliente");
 const platillosContainer = document.querySelector("#platillos");
 const consumoContainer = document.querySelector("#resumen");
-
+const categorias={
+    1: "Comida",
+    2: "Bebidas",
+    3: "Postres"
+}
 let client = {
     table: "",
     time: "", 
     order: []
 }
 
-const categorias={
-    1: "Comida",
-    2: "Bebidas",
-    3: "Postres"
-}
 
 createOrder.addEventListener("click",createOrderFunc);
 
@@ -32,6 +31,12 @@ function createOrderFunc(){
     hideModal()
 
     extractPlatillos()
+
+/*     const quantitymeals = document.querySelectorAll(".quantity");
+    quantitymeals.addEventListener("change", quantityChange);
+
+    quantitymeals.on */
+
 }
 
 function printError(message, type){
@@ -73,8 +78,6 @@ function extractPlatillos(){
 
 function showPlatillos(platillos){
     const contenido = document.querySelector("#platillos-list")
-    console.log(contenido)
-    console.log(platillos)
 
     platillos.forEach(plato=>{
         const {id, nombre, precio, categoria} = plato;
@@ -92,8 +95,15 @@ function showPlatillos(platillos){
         mealName.textContent = nombre;
         mealPrice.textContent = precio;
         mealCategoria.textContent = categorias[categoria];
-        quantity.id - id;
+
+        quantity.id = id;
+        quantity.min = 0;
         quantity.type = "number";
+        quantity.classList.add("quantity");
+
+        quantity.onchange = (e)=>{
+            quantityChange(e, nombre, precio)
+        }
 
         row.appendChild(mealName);
         row.appendChild(mealPrice);
@@ -103,4 +113,39 @@ function showPlatillos(platillos){
 
         contenido.appendChild(row);
     })
+}
+
+function quantityChange(e, nombre, precio){
+    const targetID = e.target.id;
+    const targetValue = e.target.value;
+
+    let listMeals = client.order   /* [] */
+    const mealExist = listMeals.some( meal => meal.id == targetID);
+    
+    if(targetValue == 0){
+        client.order = listMeals.filter(meal => meal.id !== targetID)
+        console.log(client.order)
+        return
+    }
+
+    if(mealExist){
+        client.order = listMeals.filter( meal => {
+            if(meal.id == targetID){
+                meal.quantity = targetValue
+            }
+        })
+        console.log(client.order)
+        return;
+    }
+
+    const meal = {
+        id: targetID,
+        nombre: nombre,
+        precio: precio,
+        quantity: targetValue
+    }
+
+    listMeals.push(meal)
+
+    console.log(client.order)
 }
