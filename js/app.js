@@ -250,7 +250,6 @@ function displayTotals(){
 
     if(percentajeTip){
         const propina = (subTotal*percentajeTip.value)/100;
-        console.log(propina, subTotal, percentajeTip)
         const total = subTotal+propina;
         printTotals(subTotal, propina, total)
     }
@@ -259,14 +258,35 @@ function displayTotals(){
 function printTotals(subTotal, propina, total){
     const totalsHTML = document.querySelector("#totals");
 
+    const subTotalDiv = document.createElement("DIV");
+    const subTotalSpan = document.createElement("SPAN");
     const subTotalP = document.createElement("P");
+    subTotalSpan.textContent = "SubTotal: ";
     subTotalP.textContent = subTotal;
+
+    subTotalDiv.appendChild(subTotalSpan);
+    subTotalDiv.appendChild(subTotalP);
+
+
+    const propinaDiv = document.createElement("DIV");
+    const propinaSpan = document.createElement("SPAN");
     const propinaP = document.createElement("P");
     propinaP.textContent = propina;
-    const totalP = document.createElement("P");
-    totalP.textContent = total;
+    propinaSpan.textContent = "Propina: ";
 
-    totalsHTML.appendChild(subTotalP);
-    totalsHTML.appendChild(propinaP);
-    totalsHTML.appendChild(totalP);
+    propinaDiv.appendChild(propinaSpan);
+    propinaDiv.appendChild(propinaP);
+
+
+    const totalDiv = document.createElement("DIV");
+    const totalSpan = document.createElement("SPAN");
+    const totalP = document.createElement("P");
+    totalSpan.textContent = "Total: ";
+    totalP.textContent = total;
+    totalDiv.appendChild(totalSpan);
+    totalDiv.appendChild(totalP);
+
+    totalsHTML.appendChild(subTotalDiv);
+    totalsHTML.appendChild(propinaDiv);
+    totalsHTML.appendChild(totalDiv);
 } 
