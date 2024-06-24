@@ -28,9 +28,32 @@
     
     <section id="resumen" class="resumen bg-light container mt-5 p-4 d-none">
         <h2 class="text-center my-4">Resumen De Consumo </h2>
+        <div class="resultados">
+            <div class="resultado-col" id="meals-list">
+                <p class="text-center">Añade los elementos del pedido</p>
+            </div>
 
-        <div class="contenido row">
-            <p class="text-center">Añade los elementos del pedido</p> <!-- anadir aca divs -->
+            <div class="resultado-col">
+                <div id="propina">
+                    <h3>Select Propina</h3>
+                    <div class="inputs-radio">
+                        <div>
+                            <input type="radio" name="percentage-tip" id="tip-1" value="10">
+                            <label for="tip-1">10%</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="percentage-tip" id="tip-2" value="20">
+                            <label for="tip-2">20%</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="percentage-tip" id="tip-3" value="30">
+                            <label for="tip-3">30%</label>
+                        </div>
+                    </div>
+                    <button id="total-btn">Calcular Propina</button>
+                </div>
+                <div id="totals"></div>
+            </div>
         </div>
     </section>
 

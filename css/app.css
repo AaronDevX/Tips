@@ -1,5 +1,27 @@
+.resultados{
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+}
+
+.inputs-radio{
+    display: flex;
+    flex-direction: column;
+}
+
 .fila-platos{
     display: grid;
     grid-template-columns: 5fr repeat(3, 2fr);
     margin-bottom: 10px;   
+}
+
+.meal-card{
+    margin-bottom: 50px;
+}
+
+.meal-card__info div{
+    display: flex;
+}
+.meal-card span{
+    font-weight: bold;
+    margin-right: 10px;
 }

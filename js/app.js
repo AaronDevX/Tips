@@ -1,6 +1,8 @@
 const createOrder = document.querySelector("#guardar-cliente");
 const platillosContainer = document.querySelector("#platillos");
 const consumoContainer = document.querySelector("#resumen");
+const lista = document.querySelector("#meals-list")
+const calcularTotal = document.querySelector("#total-btn");
 const categorias={
     1: "Comida",
     2: "Bebidas",
@@ -14,6 +16,8 @@ let client = {
 
 
 createOrder.addEventListener("click",createOrderFunc);
+calcularTotal.addEventListener("click", displayTotals)
+
 
 function createOrderFunc(){
     const table = document.querySelector("#mesa").value;
@@ -91,8 +95,9 @@ function showPlatillos(platillos){
 
         quantity.id = id;
         quantity.min = 0;
+        quantity.value = 0;
         quantity.type = "number";
-        quantity.classList.add("quantity");
+        quantity.classList.add("quantity", `in-${id}`);
 
         quantity.onchange = (e)=>{
             quantityChange(e, nombre, precio);
@@ -145,7 +150,6 @@ function quantityChange(e, nombre, precio){
 
 function addMealOrder(idM){
     listMeals = client.order;
-    lista = consumoContainer.lastElementChild
 
     listMeals.forEach(meal => {
         if(meal.id == idM){
@@ -159,20 +163,41 @@ function addMealOrder(idM){
             const mealCardPrice = document.createElement("P");
             const mealCardSubTotal = document.createElement("P");
             const mealCardDeleteBtn = document.createElement("BUTTON");
+            const mealCardQSpan = document.createElement("SPAN");
+            const mealCardPSpan = document.createElement("SPAN");
+            const mealCardSTSpan = document.createElement("SPAN");
+            const mealCardQDiv = document.createElement("DIV");
+            const mealCardPDiv = document.createElement("DIV");
+            const mealCardSTDiv = document.createElement("DIV");
 
+            mealCard.classList.add("meal-card")
             mealCard.id = `div-${id}`;
             mealCardName.textContent = nombre;
+            mealCardQSpan.textContent = "Cantidad:  ";
             mealCardQuantity.textContent  = quantity;
             mealCardQuantity.id = `q-${id}`;
-            mealCardPrice.textContent = precio;
+            mealCardPSpan.textContent = "Precio:  ";
+            mealCardPrice.textContent = `$${precio}`;
             mealCardPrice.id = `p-${id}`
-            mealCardSubTotal.textContent = `$ ${subTotal}`;
+            mealCardSTSpan.textContent = "SubTotal:  "
+            mealCardSubTotal.textContent = `$${subTotal}`;
             mealCardSubTotal.id = `st-${id}`
             mealCardDeleteBtn.textContent = "Delete"
+            mealCardInfo.classList.add("meal-card__info")
+            mealCardDeleteBtn.onclick = ()=>{
+                client.order = client.order.filter(meal => meal.id !== id)
+                removeMealOrder(id)
+            }
 
-            mealCardInfo.appendChild(mealCardQuantity);
-            mealCardInfo.appendChild(mealCardPrice);
-            mealCardInfo.appendChild(mealCardSubTotal);
+            mealCardQDiv.appendChild(mealCardQSpan);
+            mealCardQDiv.appendChild(mealCardQuantity);
+            mealCardInfo.appendChild(mealCardQDiv);
+            mealCardPDiv.appendChild(mealCardPSpan);
+            mealCardPDiv.appendChild(mealCardPrice);
+            mealCardInfo.appendChild(mealCardPDiv);
+            mealCardSTDiv.appendChild(mealCardSTSpan);
+            mealCardSTDiv.appendChild(mealCardSubTotal);
+            mealCardInfo.appendChild(mealCardSTDiv);
 
             mealCard.appendChild(mealCardName);
             mealCard.appendChild(mealCardInfo);
@@ -203,6 +228,10 @@ function modifyQuantityMealOrder(idT, value){
 
 function removeMealOrder(id){
     const mealTarget = document.querySelector(`#div-${id}`);
+    const casilla = document.querySelector(`.in-${id}`);
+    casilla.value = 0;
+    casilla.checkValidity();
+    /* casilla.dispatchEvent(new Event('input')); */
     mealTarget.remove()
 }
 
@@ -212,5 +241,32 @@ function gastoTotal(){
         const totalMeal = meal.precio*meal.quantity
         Total+=totalMeal;
     })
-    console.log(Total)
+    return Total;
 }
+
+function displayTotals(){
+    const subTotal = gastoTotal();
+    const percentajeTip = document.querySelector('[name="percentage-tip"]:checked');
+
+    if(percentajeTip){
+        const propina = (subTotal*percentajeTip.value)/100;
+        console.log(propina, subTotal, percentajeTip)
+        const total = subTotal+propina;
+        printTotals(subTotal, propina, total)
+    }
+}
+
+function printTotals(subTotal, propina, total){
+    const totalsHTML = document.querySelector("#totals");
+
+    const subTotalP = document.createElement("P");
+    subTotalP.textContent = subTotal;
+    const propinaP = document.createElement("P");
+    propinaP.textContent = propina;
+    const totalP = document.createElement("P");
+    totalP.textContent = total;
+
+    totalsHTML.appendChild(subTotalP);
+    totalsHTML.appendChild(propinaP);
+    totalsHTML.appendChild(totalP);
+} 
